@@ -1,8 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import * as Storage from '@google-cloud/storage';
-const gcs = Storage();
+import { Storage } from '@google-cloud/storage';
+const gcs = new Storage();
 
 import * as fs from 'fs-extra';
 
@@ -14,6 +14,7 @@ import * as sharp from 'sharp';
 export const resizeAvatar = functions.storage
     .object()
     .onFinalize(async object => {
+        console.log(object);
         const bucket = gcs.bucket(object.bucket);
         const filePath = object.name;
         const fileName = filePath.split('/').pop();
@@ -28,8 +29,8 @@ export const resizeAvatar = functions.storage
         }
 
         await bucket.file(filePath).download({
-            destination: tmpFilePath;
-        })
+            destination: tmpFilePath
+        });
 
         await sharp(tmpFilePath)
             .resize(100,100)
@@ -38,4 +39,5 @@ export const resizeAvatar = functions.storage
         return bucket.upload(tmpAvatarPath, {
             destination: join(dirname(filePath), avatarFileName)
         });
+
     });

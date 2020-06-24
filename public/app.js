@@ -4,5 +4,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const sendText = firebase.functions().httpsCallable('sendText');
 
-    sendText({ message: 'Hello World!' })
+    sendText({ message: 'Hello World!' });
 });
